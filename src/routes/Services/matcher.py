@@ -13,8 +13,8 @@ from pprint import pprint
 
 ## GETTING INFO FROM TERMINAL (JSON)
 ## sys.argv is list where 1st item is path of this file, 2nd, 3rd,...,nth are passed in arguments
-for string in sys.argv:
-    print(string)
+#for string in sys.argv:
+#    print(string)
 
 
 ## INTERPRETING JSON FROM FILE
@@ -59,13 +59,13 @@ newdata = """
 
 """
 
-for i in data:
-    pprint(i)
-    print("")
-print("data[user] is") 
-pprint(data['user'])
-print("data[potential matches][0][my-categories][animals] is") 
-pprint(data['potential matches'][1]['my-categories']['animals'])
+#for i in data:
+#    pprint(i)
+#    print("")
+#print("data[user] is") 
+#pprint(data['user'])
+#print("data[potential matches][0][my-categories][animals] is") 
+#pprint(data['potential matches'][1]['my-categories']['animals'])
 
 import numpy
 SCORE = numpy.zeros(len(data['potential matches'])) #array of scores, one for each potential match
@@ -188,8 +188,8 @@ for i in range(len(data['potential matches'])):
 
 myDict = dict(zip(myIDs, SCORE))
 
-for matchtuple in bestMatches:
-    print(matchtuple)
+#for matchtuple in bestMatches:
+#    print(matchtuple)
 
 
 def point5Round(afloat):
@@ -214,7 +214,7 @@ Matrix = [[0 for x in range(3)] for y in range(len(myDict))]
 #Normalization of data:
 rownum = 0
 for key in myDict:
-    print(key + ":" + str(myDict[key]))
+#    print(key + ":" + str(myDict[key]))
     myDict[key] = point5Round(10 * (myDict[key] * .5) ** (1))
     if myDict[key] > 10:
         myDict[key] = 10.0
@@ -259,6 +259,6 @@ for char in stringRes:
     else:
         realString += char
 
-print(" ")
-print("HERE IS THE RESULT:")
+#print(" ")
+#print("HERE IS THE RESULT:")
 print(realString)

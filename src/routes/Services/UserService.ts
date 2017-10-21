@@ -18,38 +18,52 @@ export default class UserService {
             fbId,
             fbToken,
             pictureUrl,
-            interestedIn
+            interestedIn,
+            gender
         } = req.body;
+        
+        console.log(req.body);
         var u : ModelTypes.IUser = new User({
             name,
             fbId,
             fbToken,
             pictureUrl,
-            interestedIn
+            interestedIn,
+            gender
         });
         try {
             await u.save();
+            console.log("SAVED USER " + u);
             const token = await clientToken(u);
             return res.status(201).json({ user: u, token: token });
         } catch(e) {
             console.log(e);
             // Already a user for this...
-            const user : ModelTypes.IUser = await User.find({name: name, fbToken: fbToken});
+            const user : ModelTypes.IUser = await User.findOne({fbToken: fbToken});
+            console.log("found user " + user);
             if(user) {
                 const token = await clientToken(user);
+                console.log(user, token);
                 return res.status(200).send({user, token}); 
             }
             return res.status(400).send({message: 'Failed to save user'}); 
         }
     }
 
-    static async addMatchingData(req, res) {
+    static async addDescriptions(req, res) {
         const {
             selfDescription,
             matchDescription
         } = req.body;
-
+        console.log(req.body);
+        
         const auth : IJwtAuth = res.locals.jwtAuth;
+        console.log(auth);
+
+        if(!auth.isAuthorized) {
+            return res.status(403).send("FORBIDDEN");
+        }
+
         const userId = auth.userID;
         const data = { selfDescription, matchDescription };
         
@@ -89,8 +103,25 @@ export default class UserService {
         
     }
 
+    static async getMyInfo(req, res) {
+        const auth : IJwtAuth = res.locals.jwtAuth;
+        console.log(auth);
+        if(!auth.isAuthorized) {
+            return res.status(403).send("FORBIDDEN");
+        }
+        const userId = auth.userID;
+        const user = await User.findById(userId);
+        return res.status(200).send({ user: user });
+    }
+
     static async getUserInfo(req, res) {
-        return res.status(200).send({ success: true });
+        const auth : IJwtAuth = res.locals.jwtAuth;
+        if(!auth.isAuthorized) {
+            return res.status(403).send("FORBIDDEN");
+        }
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+        return res.status(200).send({ user: user });
     }
 
 }

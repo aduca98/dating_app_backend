@@ -7,6 +7,7 @@ const userSchema : Schema = new Schema({
 	fbId: { type: String },
 	fbToken: { type: String },
 	pictureUrl: { type: String },
+	gender: { type: String, enum: ['male', 'female'] },
 	interestedIn: { type: String, enum: ['male', 'female']},
     selfDescription: { type: String },
     matchDescription: { type: String },

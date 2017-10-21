@@ -15,7 +15,8 @@ const routes = express.Router();
 routes.post("/local-login", LoginService.localLogin);
 
 routes.post("/create-user", tokenAuthentication, UserService.createUser);
-routes.post("/add-descriptions", tokenAuthentication, UserService.addMatchingData);
-routes.get("/user-info", tokenAuthentication, UserService.getUserInfo);
+routes.post("/add-descriptions", tokenAuthentication, UserService.addDescriptions);
+routes.get("/my-info", tokenAuthentication, UserService.getMyInfo);
+routes.get("/user-info/:id", tokenAuthentication, UserService.getUserInfo);
 
 export default routes;

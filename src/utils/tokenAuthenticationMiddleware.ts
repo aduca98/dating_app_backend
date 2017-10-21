@@ -23,7 +23,7 @@ export default function tokenAuthentication(req, res, next) {
     return next();
   }
   const atMatch = auth.split("bearer: ");
-
+  console.log(atMatch)
   // const atMatch = auth.match(jwtBearerPattern);
   const accessToken = Array.isArray(atMatch) && atMatch[1] ? atMatch[1] : null;
   
@@ -36,15 +36,17 @@ export default function tokenAuthentication(req, res, next) {
   
   jsonwebtoken.verify(accessToken, clientTokenSecret, (err, decodedToken) => {
     if (err) {
+      console.log(err);
       res.locals.jwtAuth.message = err.message || 'An unknown error occurred verifying the JWT.'
       return next()
     }
+    console.log(decodedToken);
     
     res.locals.jwtAuth.decodedToken = decodedToken
     res.locals.jwtAuth.userID = decodedToken.userID || null
     
     if (!res.locals.jwtAuth.userID) {
-      res.locals.jwtAuth.message = 'The token did not contain a username.'
+      res.locals.jwtAuth.message = 'The token did not contain a usrId.'
       return next();
     }
     

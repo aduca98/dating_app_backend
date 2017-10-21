@@ -8,6 +8,7 @@ export interface IUser {
 	fbToken: string,
     pictureUrl: string,
     interestedIn: string,
+    gender: string,
     selfDescription: string,
     matchDescription: string
     matchKeywords: string[],

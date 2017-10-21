@@ -18,5 +18,14 @@ routes.post("/create-user", tokenAuthentication, UserService.createUser);
 routes.post("/add-descriptions", tokenAuthentication, UserService.addDescriptions);
 routes.get("/my-info", tokenAuthentication, UserService.getMyInfo);
 routes.get("/user-info/:id", tokenAuthentication, UserService.getUserInfo);
+routes.get("/find-matches", tokenAuthentication, MatchService.findMatch);
+
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
+
+routes.post("/upload", upload.single('photo'), tokenAuthentication, (req, res) => {
+    console.log(req.file);
+    return res.status(200).send({success: true});
+});
 
 export default routes;

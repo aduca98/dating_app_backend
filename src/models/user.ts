@@ -3,21 +3,20 @@ import bcrypt = require('bcrypt-nodejs');
 
 const userSchema : Schema = new Schema({
     name: { type: String},
-    email: { type: String, unique: true },
 	fbId: { type: String },
 	fbToken: { type: String },
 	pictureUrl: { type: String },
 	gender: { type: String, enum: ['male', 'female'] },
 	interestedIn: { type: String, enum: ['male', 'female']},
 
-	selfCategories: { type: Array },
-	matchCategories: { type: Array },
+	selfCategories: { type: Object },
+	matchCategories: { type: Object },
 
     selfDescription: { type: String },
     matchDescription: { type: String },
 
-    matchEntitySalience: { type: Array },
-	selfEntitySalience: { type: Array },
+    matchEntitySalience: { type: Object },
+	selfEntitySalience: { type: Object },
 
 	createdAt: { type: Date }
 });

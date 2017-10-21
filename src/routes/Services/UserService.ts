@@ -11,38 +11,48 @@ const Match = mongoose.model('Match');
 const User = mongoose.model('User');
 
 function formatCategories(categories) {         
-    console.log("C " + JSON.stringify(categories));
     const formattedCategories = {};
     for(let i = 0; i < categories.length; i++) {
-        const category = categories[i];
-        const name = category.name;
-        const confidence = category.confidence;
-        
-        // Set multiple confidences
-        var names;
-        try {
-            names = name.split("/");
-            for(let j = 0; j < names.length; j++) {
-                const category = names[i];
-                formattedCategories[category] = confidence;
+        const cat = categories[i].categories;
+
+        for(let j = 0; j < cat.length; j++) {
+            var c = cat[j];
+            const name = c.name;
+            const confidence = c.confidence;
+            // Set multiple confidences
+
+            try {
+
+                var names = c.name.split("/");
+
+                for(let k = 0; k < names.length; k++) {
+                    const category = names[k];
+
+                    if(category) {
+                        formattedCategories[category] = confidence;
+                    }
+                }
+            } catch(e) {
+                console.log(e);
+                formattedCategories[name] = confidence;
             }
-        } catch(e) {
-            formattedCategories[name] = confidence;
         }
-        
     }
-    return formatCategories;
+    console.log(formattedCategories)
+    return formattedCategories;
 }
 
 function formatEntities(entities) {
-    console.log("E " + JSON.stringify(entities));
     const formattedEntities = {};
     for(let i = 0; i < entities.length; i++) {
-        const entity = entities[i];
-        const name = entity.name;
-        const salience = entity.salience;
-        
-        if(name) formattedEntities[name] = salience;
+        const entity = entities[i].entities;
+
+        for(let j = 0; j < entity.length; j++) {
+            const e = entity[j];
+            const name = e.name;
+            const salience = e.salience;
+            if(name) formattedEntities[name] = salience;
+        }
     }
     return formattedEntities;
 }
@@ -143,8 +153,9 @@ export default class UserService {
                 selfCategories: self_cat,
                 selfEntitySalience: self_entities,
             }
+            console.log(keywordsData);
 
-            // const newUser = await User.findById(userId, keywordsData, {new: true});
+            const newUser = await User.findByIdAndUpdate(userId, keywordsData, {new: true});
             return res.status(200).send({ results: results, user: user })
             
         } catch(e) {
@@ -170,7 +181,7 @@ export default class UserService {
         }
                 
         const user = await User.findOne(query);
-        return res.status(200).send({ user: user });
+        return res.status(200).send({ user });
     }
 
     static async getUserInfo(req, res) {

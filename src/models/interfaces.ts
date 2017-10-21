@@ -3,7 +3,6 @@ import * as mongoose from 'mongoose';
 export interface IUser {
     _id: mongoose.Schema.Types.ObjectId,
     name: string,
-    email: string,
     fbId: string,
 	fbToken: string,
     pictureUrl: string,
@@ -15,7 +14,7 @@ export interface IUser {
 
     selfDescription: string,
     matchDescription: string,
-
+    
     matchEntitySalience: Object[],
 	selfEntitySalience: Object[],
 

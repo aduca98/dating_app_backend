@@ -4,7 +4,7 @@ import clientToken from '../../utils/clientToken';
 import { IJwtAuth } from '../../utils/tokenAuthenticationMiddleware';
 
 const language = require('@google-cloud/language');
-const client = new language.v1beta2.LanguageServiceClient({ keyFilename: 'dateapp-4138fa62cb84.json' });
+const client = new language.v1beta2.LanguageServiceClient();
 
 // Import models
 const Match = mongoose.model('Match');
@@ -56,7 +56,7 @@ export default class UserService {
             matchDescription
         } = req.body;
         console.log(req.body);
-        
+
         const auth : IJwtAuth = res.locals.jwtAuth;
         console.log(auth);
 
@@ -85,12 +85,27 @@ export default class UserService {
             var entities = await client.analyzeEntities({document: selfDocument});
             var sentiment = await client.analyzeSentiment({document: selfDocument});
 
+            // Format categories 
+            const formattedCategories = {};
+            for(let i = 0; i < categories; i++) {
+                const category = categories[i];
+                const names = category.name.split("/");
+                const confidence = category.confidence;
+                for(let j = 0; j < names.length; j++) {
+                    const category = names[i];
+                    formattedCategories[category] = confidence;
+                }
+            }
+
             var results : any = {
                 categories,
                 sentimentEntities,
                 entities
             };
 
+            
+
+            const newUser = await User.findById(userId, data {new: true});
             return res.status(200).send({ results: results, user: user })
             
         } catch(e) {
@@ -105,12 +120,17 @@ export default class UserService {
 
     static async getMyInfo(req, res) {
         const auth : IJwtAuth = res.locals.jwtAuth;
-        console.log(auth);
-        if(!auth.isAuthorized) {
-            return res.status(403).send("FORBIDDEN");
-        }
+        const fbId = req.query.fbId;
         const userId = auth.userID;
-        const user = await User.findById(userId);
+
+        var query;
+        if(fbId) {
+            query = {fbId: fbId};
+        } else {
+            query = {_id: userId};
+        }
+                
+        const user = await User.findOne(query);
         return res.status(200).send({ user: user });
     }
 

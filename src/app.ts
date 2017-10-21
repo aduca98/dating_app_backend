@@ -53,4 +53,10 @@ var User = require('./models/user');
 import routes from './routes/api';
 app.use("/api", routes);
 
+// Google init
+var gcloud = require('google-cloud')({
+  projectId: 'grape-spaceship-123',
+  keyFilename: 'dateapp-4138fa62cb84.json'
+});
+
 export default app;

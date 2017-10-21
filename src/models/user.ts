@@ -9,10 +9,12 @@ const userSchema : Schema = new Schema({
 	pictureUrl: { type: String },
 	gender: { type: String, enum: ['male', 'female'] },
 	interestedIn: { type: String, enum: ['male', 'female']},
+	
     selfDescription: { type: String },
     matchDescription: { type: String },
     matchKeywords: { type: Array },
 	selfKeywords: { type: Array },
+	categories: { type: Array },
 	createdAt: { type: Date }
 });
 

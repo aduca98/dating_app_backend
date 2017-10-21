@@ -9,10 +9,16 @@ export interface IUser {
     pictureUrl: string,
     interestedIn: string,
     gender: string,
+
+    selfCategories: Object[],
+	matchCategories: Object[],
+
     selfDescription: string,
-    matchDescription: string
-    matchKeywords: string[],
-	selfKeywords: string[],
+    matchDescription: string,
+
+    matchEntitySalience: Object[],
+	selfEntitySalience: Object[],
+
 	createdAt: Date,
     comparePassword: (candidatePassword : string) => Promise<any>,
     save: () => Promise<any>,

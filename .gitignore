@@ -1,4 +1,5 @@
-*.pyc
-.DS_Store
-env
-venv
+# dependencies
+/node_modules
+
+# production
+/build

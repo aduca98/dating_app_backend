@@ -2,15 +2,19 @@ import * as mongoose from 'mongoose';
 
 export interface IUser {
     _id: mongoose.Schema.Types.ObjectId,
-    firstName: string,
-    lastName: string,
+    name: string,
     email: string,
+    fbId: string,
+	fbToken: string,
+    pictureUrl: string,
+    interestedIn: string,
     selfDescription: string,
     matchDescription: string
     matchKeywords: string[],
 	selfKeywords: string[],
 	createdAt: Date,
-    comparePassword: (candidatePassword : string) => Promise<any>
+    comparePassword: (candidatePassword : string) => Promise<any>,
+    save: () => Promise<any>,
 }
 
 export interface IMatch {

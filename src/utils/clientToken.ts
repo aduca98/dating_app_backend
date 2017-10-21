@@ -9,10 +9,8 @@ export default function createClientToken(user : ModelTypes.IUser) {
 
   return new Promise((resolve, reject) => {
 
-    const fullName = user.firstName + " " + user.lastName;
     const payload = {
         userID: user._id,
-        name: fullName,
     }
     
     jwt.sign(payload, clientTokenSecret, {algorithm: ALGORITHM, expiresIn: expiresIn}, (err, token) => {

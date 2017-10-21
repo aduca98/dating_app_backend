@@ -2,9 +2,12 @@ import {model, Schema} from 'mongoose';
 import bcrypt = require('bcrypt-nodejs');
 
 const userSchema : Schema = new Schema({
-    firstName: { type: String},
-    lastName: { type: String },
+    name: { type: String},
     email: { type: String, unique: true },
+	fbId: { type: String },
+	fbToken: { type: String },
+	pictureUrl: { type: String },
+	interestedIn: { type: String, enum: ['male', 'female']},
     selfDescription: { type: String },
     matchDescription: { type: String },
     matchKeywords: { type: Array },

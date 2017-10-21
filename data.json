@@ -1,0 +1,32 @@
+{
+	"user": {
+         "userID": "0001",
+         "my-salience-score": {"ponies": 0.55, "rich": 0.36, "andrew": 0.10},
+         "my-categories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
+         "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+         "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+    }, 
+	"potential matches": [
+    	{
+        	 "userID": "0002",
+	         "my-salience-score": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
+	         "my-categories": {"technology": 0.61, "news": 0.53, "animals": 0.26},
+	         "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+	         "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+        },
+        {
+             "userID": "0003",
+             "my-salience-score": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
+             "my-categories": {"technology": 0.61, "fashion": 0.53, "animals": 0.22},
+             "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+             "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+        },
+        {
+             "userID": "0004",
+             "my-salience-score": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
+             "my-categories": {"money": 0.61, "news": 0.53, "animals": 0.22},
+             "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+             "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+        }
+	]
+}

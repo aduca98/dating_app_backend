@@ -2,15 +2,14 @@ import {model, Schema} from 'mongoose';
 import bcrypt = require('bcrypt-nodejs');
 
 const userSchema : Schema = new Schema({
-    username: { type: String },
     firstName: { type: String},
     lastName: { type: String },
     email: { type: String, unique: true },
-    password: { type: String },
-    resetPasswordToken: { type: String },
-    resetPasswordTokenExpiration: { type: Date },
-    createdAt: { type: Date },
-    lastInteraction: { type: Date },
+    selfDescription: { type: String },
+    matchDescription: { type: String },
+    matchKeywords: { type: Array },
+	selfKeywords: { type: Array },
+	createdAt: { type: Date }
 });
 
 userSchema.pre("save", function (next) {

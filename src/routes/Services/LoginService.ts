@@ -5,7 +5,6 @@ import * as mongoose from 'mongoose';
 // Database models
 import * as ModelTypes from '../../models/interfaces';
 const User = mongoose.model('User');
-const Shop = mongoose.model('Shop');
 
 export default class LoginService {
 

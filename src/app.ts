@@ -11,7 +11,7 @@ var app = express();
 
 var MongoStore = require('connect-mongo')(session);
 
-var database_uri = "mongodb://aduca:randomstring@ds149724.mlab.com:49724/rental_demo";
+var database_uri = "mongodb://admin:123@ds151963.mlab.com:51963/datingapp";
 
 // Initilize express:
 var app = express();
@@ -46,9 +46,7 @@ db.on("error", function(err) {
 });
 
 // Import models
-var Shop = require('./models/shop');
-var Rental = require('./models/rental');
-var Item = require('./models/item');
+var Match = require('./models/match');
 var User = require('./models/user');
 
 // Importing api routes

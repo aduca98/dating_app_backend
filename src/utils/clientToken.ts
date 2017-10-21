@@ -13,7 +13,6 @@ export default function createClientToken(user : ModelTypes.IUser) {
     const payload = {
         userID: user._id,
         name: fullName,
-        username: user.username,
     }
     
     jwt.sign(payload, clientTokenSecret, {algorithm: ALGORITHM, expiresIn: expiresIn}, (err, token) => {

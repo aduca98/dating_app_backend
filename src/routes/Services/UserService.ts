@@ -4,11 +4,48 @@ import clientToken from '../../utils/clientToken';
 import { IJwtAuth } from '../../utils/tokenAuthenticationMiddleware';
 
 const language = require('@google-cloud/language');
-const client = new language.v1beta2.LanguageServiceClient();
+const client = new language.v1beta2.LanguageServiceClient({keyFilename: 'dateapp-4138fa62cb84.json'});
 
 // Import models
 const Match = mongoose.model('Match');
 const User = mongoose.model('User');
+
+function formatCategories(categories) {         
+    console.log("C " + JSON.stringify(categories));
+    const formattedCategories = {};
+    for(let i = 0; i < categories.length; i++) {
+        const category = categories[i];
+        const name = category.name;
+        const confidence = category.confidence;
+        
+        // Set multiple confidences
+        var names;
+        try {
+            names = name.split("/");
+            for(let j = 0; j < names.length; j++) {
+                const category = names[i];
+                formattedCategories[category] = confidence;
+            }
+        } catch(e) {
+            formattedCategories[name] = confidence;
+        }
+        
+    }
+    return formatCategories;
+}
+
+function formatEntities(entities) {
+    console.log("E " + JSON.stringify(entities));
+    const formattedEntities = {};
+    for(let i = 0; i < entities.length; i++) {
+        const entity = entities[i];
+        const name = entity.name;
+        const salience = entity.salience;
+        
+        if(name) formattedEntities[name] = salience;
+    }
+    return formattedEntities;
+}
 
 export default class UserService {
 
@@ -80,32 +117,34 @@ export default class UserService {
                 type: "PLAIN_TEXT",
                 language: "EN"
             }
-            var categories = await client.classifyText({document: selfDocument});
-            var sentimentEntities = await client.analyzeEntitySentiment({document: selfDocument});
-            var entities = await client.analyzeEntities({document: selfDocument});
-            var sentiment = await client.analyzeSentiment({document: selfDocument});
+            var self_cat = await client.classifyText({document: selfDocument});
+            var self_entities = await client.analyzeEntities({document: selfDocument});
 
-            // Format categories 
-            const formattedCategories = {};
-            for(let i = 0; i < categories; i++) {
-                const category = categories[i];
-                const names = category.name.split("/");
-                const confidence = category.confidence;
-                for(let j = 0; j < names.length; j++) {
-                    const category = names[i];
-                    formattedCategories[category] = confidence;
-                }
-            }
+            const self_fc = formatCategories(self_cat);
+            const self_fe = formatEntities(self_entities);
+
+            var match_cat = await client.classifyText({document: matchDocument});
+            var match_entities = await client.analyzeEntities({document: matchDocument});
+
+            const match_fc = formatCategories(match_cat);
+            const match_fe = formatEntities(match_entities);
 
             var results : any = {
-                categories,
-                sentimentEntities,
-                entities
+                self_fc,
+                self_fe,
+                match_fc,
+                match_fe
             };
+            console.log(results);
 
-            
+            const keywordsData = {
+                matchCategories: match_cat,
+                matchEntitySalience: match_entities,
+                selfCategories: self_cat,
+                selfEntitySalience: self_entities,
+            }
 
-            const newUser = await User.findById(userId, data {new: true});
+            // const newUser = await User.findById(userId, keywordsData, {new: true});
             return res.status(200).send({ results: results, user: user })
             
         } catch(e) {

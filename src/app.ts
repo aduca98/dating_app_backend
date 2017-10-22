@@ -52,5 +52,8 @@ var User = require('./models/user');
 // Importing api routes
 import routes from './routes/api';
 app.use("/api", routes);
+app.get("/", function(req, res) {
+  return res.status(200).send("SUCCESS, ;)");
+});
 
 export default app;

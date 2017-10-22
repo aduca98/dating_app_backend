@@ -19,6 +19,7 @@ routes.post("/add-descriptions", tokenAuthentication, UserService.addDescription
 routes.get("/my-info", tokenAuthentication, UserService.getMyInfo);
 routes.get("/user-info/:id", tokenAuthentication, UserService.getUserInfo);
 routes.get("/find-matches", tokenAuthentication, MatchService.findMatch);
+routes.get("/computer-features/:id", UserService.computeFeatures);
 
 var multer  = require('multer')
 var upload = multer({ dest: 'uploads/' })

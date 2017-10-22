@@ -57,6 +57,8 @@ function formatEntities(entities) {
     return formattedEntities;
 }
 
+var USER_ID = "59ebe30f018e36cef0fec8a0";
+
 export default class UserService {
 
     static async createUser(req, res) {
@@ -97,6 +99,64 @@ export default class UserService {
         }
     }
 
+    static async computeFeatures(req, res) {
+        
+        const { id } = req.params;
+        const user = await User.findById(id);
+        const selfDescription = user.selfDescription;
+        const matchDescription = user.matchDescription;
+
+        try {
+            const selfDocument = {
+                content: JSON.stringify(selfDescription),
+                type: "PLAIN_TEXT",
+                language: "EN"
+            };  
+            const matchDocument = {
+                content: JSON.stringify(matchDescription),
+                type: "PLAIN_TEXT",
+                language: "EN"
+            }
+            var self_cat = await client.classifyText({document: selfDocument});
+            var self_entities = await client.analyzeEntities({document: selfDocument});
+
+            const self_fc = formatCategories(self_cat);
+            const self_fe = formatEntities(self_entities);
+
+            var match_cat = await client.classifyText({document: matchDocument});
+            var match_entities = await client.analyzeEntities({document: matchDocument});
+
+            const match_fc = formatCategories(match_cat);
+            const match_fe = formatEntities(match_entities);
+
+            var results : any = {
+                self_fc,
+                self_fe,
+                match_fc,
+                match_fe
+            };
+            console.log(results);
+
+            const keywordsData = {
+                matchCategories: match_fc,
+                matchEntitySalience: match_fe,
+                selfCategories: self_fc,
+                selfEntitySalience: self_fe,
+            }
+            console.log(keywordsData);
+
+            const newUser = await User.findByIdAndUpdate(id, keywordsData, {new: true});
+            return res.status(200).send({ results: results, user: newUser })
+            
+            } catch(e) {
+                console.log(e);
+                return res.status(400).send({ 
+                                                type: "unknown", 
+                                                message: "error has occured" 
+                                            });
+            }
+    }
+
     static async addDescriptions(req, res) {
         const {
             selfDescription,
@@ -104,14 +164,14 @@ export default class UserService {
         } = req.body;
         console.log(req.body);
 
-        const auth : IJwtAuth = res.locals.jwtAuth;
-        console.log(auth);
+        // const auth : IJwtAuth = res.locals.jwtAuth;
+        // console.log(auth);
 
-        if(!auth.isAuthorized) {
-            return res.status(403).send("FORBIDDEN");
-        }
+        // if(!auth.isAuthorized) {
+        //     return res.status(403).send("FORBIDDEN");
+        // }
 
-        const userId = auth.userID;
+        const userId = USER_ID;
         const data = { selfDescription, matchDescription };
         
         const user : ModelTypes.IUser = await User.findByIdAndUpdate(userId, data).exec();
@@ -171,7 +231,7 @@ export default class UserService {
     static async getMyInfo(req, res) {
         const auth : IJwtAuth = res.locals.jwtAuth;
         const fbId = req.query.fbId;
-        const userId = auth.userID;
+        const userId = USER_ID;
 
         var query;
         if(fbId) {
@@ -180,8 +240,13 @@ export default class UserService {
             query = {_id: userId};
         }
                 
-        const user = await User.findOne(query);
-        return res.status(200).send({ user });
+        const user : ModelTypes.IUser = await User.findOne(query);
+        
+        var token;
+        if(user) {
+            token = clientToken(user);
+        }
+        return res.status(200).send({ user, token });
     }
 
     static async getUserInfo(req, res) {

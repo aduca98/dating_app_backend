@@ -8,7 +8,8 @@ export interface IUser {
     pictureUrl: string,
     interestedIn: string,
     gender: string,
-
+    age: string,
+    
     selfCategories: Object[],
 	matchCategories: Object[],
 

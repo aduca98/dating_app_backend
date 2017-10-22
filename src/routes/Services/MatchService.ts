@@ -23,7 +23,7 @@ export default class MatchService {
 
         const user : ModelTypes.IUser = await User.findById(userId); 
         console.log('u ' + user);
-        const potentialMatches : ModelTypes.IUser[] = await User.find({gender: user.interestedIn});
+        const potentialMatches : ModelTypes.IUser[] = await User.find();
         console.log(user, potentialMatches);
 
         fs.writeFile("data.json", JSON.stringify({user, potentialMatches}), 'utf8', function (err) {

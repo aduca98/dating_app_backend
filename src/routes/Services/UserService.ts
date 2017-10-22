@@ -259,4 +259,80 @@ export default class UserService {
         return res.status(200).send({ user: user });
     }
 
+    static async updateUser(req, res) {
+        const {
+            name,
+            gender,
+            interestedIn,
+            age
+        } = req.body;
+        var data = {
+            name,
+            gender,
+            interestedIn,
+            age
+        }
+        const u : ModelTypes.IUser = await User.findByIdAndUpdate(USER_ID, data, {new: true});
+        return res.status(200).send({user: u});
+    }
+
+    static async updateDescriptions(req, res) {
+        const {
+            selfDescription,
+            matchDescription
+        } = req.body;
+    
+        try {
+            const selfDocument = {
+                content: JSON.stringify(selfDescription),
+                type: "PLAIN_TEXT",
+                language: "EN"
+            };  
+            const matchDocument = {
+                content: JSON.stringify(matchDescription),
+                type: "PLAIN_TEXT",
+                language: "EN"
+            }
+            var self_cat = await client.classifyText({document: selfDocument});
+            var self_entities = await client.analyzeEntities({document: selfDocument});
+
+            const self_fc = formatCategories(self_cat);
+            const self_fe = formatEntities(self_entities);
+
+            var match_cat = await client.classifyText({document: matchDocument});
+            var match_entities = await client.analyzeEntities({document: matchDocument});
+
+            const match_fc = formatCategories(match_cat);
+            const match_fe = formatEntities(match_entities);
+
+            var results : any = {
+                self_fc,
+                self_fe,
+                match_fc,
+                match_fe
+            };
+            console.log(results);
+
+            const keywordsData = {
+                matchCategories: match_fc,
+                matchEntitySalience: match_fe,
+                selfCategories: self_fc,
+                selfEntitySalience: self_fe,
+                selfDescription,
+                matchDescription
+            }
+            console.log(keywordsData);
+
+            const newUser = await User.findByIdAndUpdate(USER_ID, keywordsData, {new: true});
+            return res.status(200).send({ results: results, user: newUser })
+            
+        } catch(e) {
+            console.log(e);
+            return res.status(400).send({ 
+                                            type: "unknown", 
+                                            message: "error has occured" 
+                                        });
+        }
+    }
+
 }

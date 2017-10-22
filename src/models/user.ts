@@ -8,7 +8,8 @@ const userSchema : Schema = new Schema({
 	pictureUrl: { type: String },
 	gender: { type: String, enum: ['male', 'female'] },
 	interestedIn: { type: String, enum: ['male', 'female']},
-
+	age: { type: String },
+	
 	selfCategories: { type: Object },
 	matchCategories: { type: Object },
 

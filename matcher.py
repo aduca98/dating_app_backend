@@ -26,33 +26,33 @@ with open('data.json') as data_file:
 newdata = """
 {
 	"user": {
-         "userID": "0001",
-         "my-salience-score": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
-         "my-categories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
-         "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
-         "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+         "_id": "0001",
+         "selfEntitySalience": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
+         "selfCategories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
+         "matchEntitySalience": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+         "matchCategories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
     }, 
-	"potential matches": [
+	"potentialMatches": [
     	{
-        	 "userID": "0002",
-	         "my-salience-score": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
-	         "my-categories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
-	         "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
-	         "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+        	 "_id": "0002",
+	         "selfEntitySalience": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
+	         "selfCategories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
+	         "matchEntitySalience": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+	         "matchCategories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
         },
         {
-             "userID": "0003",
-             "my-salience-score": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
-             "my-categories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
-             "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
-             "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+             "_id": "0003",
+             "selfEntitySalience": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
+             "selfCategories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
+             "matchEntitySalience": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+             "matchCategories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
         },
         {
-             "userID": "0004",
-             "my-salience-score": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
-             "my-categories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
-             "wanted-salience-score": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
-             "wanted-categories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
+             "_id": "0004",
+             "selfEntitySalience": {"ponies": 0.55, "rainbows": 0.36, "andrew": 0.10},
+             "selfCategories": {"technology": 0.61, "news": 0.53, "animals": 0.22},
+             "matchEntitySalience": {"iPhone": 0.62, "rich": 0.52, "hats": 0.21},
+             "matchCategories": {"fashion": 0.67, "money": 0.57, "technology": 0.27}
         }
 	]
 }
@@ -64,11 +64,11 @@ newdata = """
 #    print("")
 #print("data[user] is") 
 #pprint(data['user'])
-#print("data[potential matches][0][my-categories][animals] is") 
-#pprint(data['potential matches'][1]['my-categories']['animals'])
+#print("data[potential matches][0][selfCategories][animals] is") 
+#pprint(data['potential matches'][1]['selfCategories']['animals'])
 
 import numpy
-SCORE = numpy.zeros(len(data['potential matches'])) #array of scores, one for each potential match
+SCORE = numpy.zeros(len(data['potentialMatches'])) #array of scores, one for each potential match
 myIDs = []                                           #all scores start at zero
 bestMatches = []
 """
@@ -95,16 +95,16 @@ def usefulFunc4(dict1, dict2, dict3, string, val):
     usefulFunc2(dict2, dict3, string)
     usefulFunc3(dic3, val, string)
 """
-for i in range(len(data['potential matches'])):
-    ith_person = data['potential matches'][i] #ITERATING OVER OTHER PEOPLE IN DB
-    myIDs.append(ith_person['userID'])
+for i in range(len(data['potentialMatches'])):
+    ith_person = data['potentialMatches'][i] #ITERATING OVER OTHER PEOPLE IN DB
+    myIDs.append(ith_person['_id'])
     highest = 0
     secondhighest = 0
     thirdhighest = 0
     bestkeywords = []
-    for category_string in data['user']['my-categories']: #for each category that this person has,
-        if category_string in ith_person['wanted-categories']: #if that category is wanted by a person in the database,
-            x = data['user']['my-categories'][category_string] * ith_person['wanted-categories'][category_string]
+    for category_string in data['user']['selfCategories']: #for each category that this person has,
+        if category_string in ith_person['matchCategories']: #if that category is wanted by a person in the database,
+            x = data['user']['selfCategories'][category_string] * ith_person['matchCategories'][category_string]
             SCORE[i] += x
             if x >= highest:
                 thirdhighest = secondhighest
@@ -129,9 +129,9 @@ for i in range(len(data['potential matches'])):
             elif x > thirdhighest:
                 thirdhighest = x
                 """
-    for category_string in data['user']['wanted-categories']: #for each category that this person wants,
-        if category_string in ith_person['my-categories']: #if that category is had by a person in the database,
-            x = data['user']['wanted-categories'][category_string] * ith_person['my-categories'][category_string] 
+    for category_string in data['user']['matchCategories']: #for each category that this person wants,
+        if category_string in ith_person['selfCategories']: #if that category is had by a person in the database,
+            x = data['user']['matchCategories'][category_string] * ith_person['selfCategories'][category_string] 
             SCORE[i] += x
             if x >= highest:
                 thirdhighest = secondhighest
@@ -145,9 +145,9 @@ for i in range(len(data['potential matches'])):
             elif x >= thirdhighest:
                 thirdhighest = x
                 bestkeywords.append(category_string)
-    for my_salience in data['user']['my-salience-score']: #for each category that this person wants,
-        if my_salience in ith_person['wanted-salience-score']: #if that category is had by a person in the database,
-            x = data['user']['my-salience-score'][my_salience] * ith_person['wanted-salience-score'][my_salience]
+    for my_salience in data['user']['selfEntitySalience']: #for each category that this person wants,
+        if my_salience in ith_person['matchEntitySalience']: #if that category is had by a person in the database,
+            x = data['user']['selfEntitySalience'][my_salience] * ith_person['matchEntitySalience'][my_salience]
             SCORE[i] += x
             if x >= highest:
                 thirdhighest = secondhighest
@@ -161,9 +161,9 @@ for i in range(len(data['potential matches'])):
             elif x >= thirdhighest:
                 thirdhighest = x
                 bestkeywords.append(my_salience)
-    for my_salience in data['user']['wanted-salience-score']: #for each category that this person wants,
-        if my_salience in ith_person['my-salience-score']: #if that category is had by a person in the database,
-            x = data['user']['my-salience-score'][my_salience] * ith_person['wanted-salience-score'][my_salience]
+    for my_salience in data['user']['matchEntitySalience']: #for each category that this person wants,
+        if my_salience in ith_person['selfEntitySalience']: #if that category is had by a person in the database,
+            x = data['user']['selfEntitySalience'][my_salience] * ith_person['matchEntitySalience'][my_salience]
             SCORE[i] += x
             if x >= highest:
                 thirdhighest = secondhighest
@@ -261,4 +261,5 @@ for char in stringRes:
 
 #print(" ")
 #print("HERE IS THE RESULT:")
-print(realString)
+# print(realString)
+print(stringRes)

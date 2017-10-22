@@ -1,9 +1,15 @@
 import * as express from 'express';
+import * as mongoose from 'mongoose';
+import * as ModelTypes from '../models/interfaces';
+
 import uploadToGoogle from '../utils/upload';
 
 // Custom middleware, just adds auth information to res.locals
 // NOTE: Does not handle redirect
 import tokenAuthentication from '../utils/tokenAuthenticationMiddleware';
+
+var USER_ID = "59ebe30f018e36cef0fec8a0";
+const User = mongoose.model('User');
 
 // Different services
 import LoginService from './Services/LoginService';
@@ -32,8 +38,10 @@ var upload = multer({ dest: 'uploads/' })
 routes.post("/upload", upload.single('photo'), tokenAuthentication, async (req, res) => {
     console.log(req.file);
     try {
-        const file = await uploadToGoogle(req.file.filename);
-        return res.status(200).send({success: true});
+        const url = await uploadToGoogle(req.file.filename);
+        console.log("URL: " + url);
+        const user : ModelTypes.IUser = await User.findByIdAndUpdate(USER_ID, {pictureUrl: url}, {new: true})
+        return res.status(200).send({url});
     } catch(e) {
         console.log(e);
         return res.status(400).send({type: "Unknown error", message: e});

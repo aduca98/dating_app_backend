@@ -250,10 +250,6 @@ export default class UserService {
     }
 
     static async getUserInfo(req, res) {
-        const auth : IJwtAuth = res.locals.jwtAuth;
-        if(!auth.isAuthorized) {
-            return res.status(403).send("FORBIDDEN");
-        }
         const userId = req.params.id;
         const user = await User.findById(userId);
         return res.status(200).send({ user: user });

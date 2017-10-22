@@ -1,11 +1,8 @@
+import Storage from '@google-cloud/storage';
+const bucketName = "dating-app";
+
 function toGoogle(inname) {
-	// Imports the Google Cloud client library
-	import Storage = require('@google-cloud/storage');
-
-	// The name of the bucket to access, e.g. "my-bucket"
-	const bucketName = "dating-app";
-
-
+	
 	// The name of the local file to upload, e.g. "./local/path/to/file.txt"
 	const filename = "./uploads/" + inname;
 

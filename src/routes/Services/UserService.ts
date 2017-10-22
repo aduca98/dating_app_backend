@@ -148,10 +148,10 @@ export default class UserService {
             console.log(results);
 
             const keywordsData = {
-                matchCategories: match_cat,
-                matchEntitySalience: match_entities,
-                selfCategories: self_cat,
-                selfEntitySalience: self_entities,
+                matchCategories: match_fc,
+                matchEntitySalience: match_fe,
+                selfCategories: self_fc,
+                selfEntitySalience: self_fe,
             }
             console.log(keywordsData);
 

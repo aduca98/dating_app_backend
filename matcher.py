@@ -89,7 +89,7 @@ for i in range(len(data['potentialMatches'])):
     bestkeywords = []
     for category_string in data['user']['selfCategories']: #for each category that this person has,
          #if that category is wanted by a person in the database,
-        if category_string in ith_person['matchCategories']:
+        if 'matchCategories' in ith_person and category_string in ith_person['matchCategories']:
             x = data['user']['selfCategories'][category_string] * ith_person['matchCategories'][category_string]
             SCORE[i] += x
             if x >= highest:
@@ -119,7 +119,7 @@ for i in range(len(data['potentialMatches'])):
                 thirdhighest = x
                 """
     for category_string in data['user']['matchCategories']: #for each category that this person wants,
-        if category_string in ith_person['selfCategories']:
+        if 'selfCategories' in ith_person and category_string in ith_person['selfCategories']:
             x =  data['user']['matchCategories'][category_string] * ith_person['selfCategories'][category_string] 
             SCORE[i] += x
             if x >= highest:
@@ -272,8 +272,11 @@ def sort2DArray(TwoDArray):
     res = sorted(TwoDArray, key=lambda x: -x[1])
     return res
 
-print(json.dumps(sort2DArray(Matrix)))
+file = open("results.txt" , 'w')
+file.write(json.dumps(sort2DArray(Matrix)))
 
+file.close()
+print("stored in results.txt")
 
 
 """

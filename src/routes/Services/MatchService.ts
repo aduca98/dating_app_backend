@@ -28,19 +28,16 @@ export default class MatchService {
 
         fs.writeFile("data.json", JSON.stringify({user, potentialMatches}), 'utf8', function (err) {
             if (err) {
-                return console.log(err);
+                console.log(err);
             }
-             console.log("The file was saved!");
-             PythonShell.run('matcher.py', function (err, results) {
-                 // results is an array consisting of messages collected during execution
-                 console.log('results: %j', results);
-                 //console.log(err)
-                
-             });
+            PythonShell.run('matcher.py', function (err, results) {
+                // results is an array consisting of messages collected during execution
+                console.log('results: %j', results);
+                return res.status(200).send({ matches: potentialMatches });
+                // db.getCollection('feed').find({"_id" : {"$in" : [ObjectId("55880c251df42d0466919268"), ObjectId("55bf528e69b70ae79be35006")]}});
 
-
+            });
         }); 
-        return res.status(200).send({ matches: potentialMatches });
 
     }
 

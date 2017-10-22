@@ -218,7 +218,7 @@ for key in myDict:
     myDict[key] = point5Round(10 * (myDict[key] * .5) ** (1))
     if myDict[key] > 10:
         myDict[key] = 10.0
-    Matrix[rownum][0] = key
+    Matrix[rownum][0] = key.encode('utf-8')
     Matrix[rownum][1] = myDict[key]
     Matrix[rownum][2] = bestMatches[rownum]
     rownum += 1

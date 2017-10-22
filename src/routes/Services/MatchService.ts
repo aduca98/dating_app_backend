@@ -37,7 +37,7 @@ export default class MatchService {
             //     // db.getCollection('feed').find({"_id" : {"$in" : [ObjectId("55880c251df42d0466919268"), ObjectId("55bf528e69b70ae79be35006")]}});
 
             // });
-            var matches = [
+            var metrics = [
                 ["59ec0f3e018e36cef0ffa5ef", 9.0, ["kids", "cook", "family"]], 
                 ["59ec16ca018e36cef0ffcdb0", 8.5, ["kids", "cook"]], 
                 ["59ec0ee9018e36cef0ffa380", 8.5, ["kids", "cook"]], 
@@ -48,12 +48,12 @@ export default class MatchService {
                 ["59ec0163018e36cef0ff621c", 1.5, ["Funny", "Arts & Entertainment"]]]
         
             var ids = [];
-            for(var i = 0; i < matches.length; i++) {
-                var match = matches[i];
+            for(var i = 0; i < metrics.length; i++) {
+                var match = metrics[i];
                 ids.push(match[0]);
             }
             const allMatches = await User.find({"_id": {"$in": ids}});
-            return res.status(200).json({ matches: allMatches, metrics: matches });
+            return res.status(200).json({ metrics: metrics, matches: allMatches });
         }); 
 
     }

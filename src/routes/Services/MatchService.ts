@@ -30,13 +30,13 @@ export default class MatchService {
             if (err) {
                 return console.log(err);
             }
-            // console.log("The file was saved!");
-            // PythonShell.run('matcher.py', function (err, results) {
-            //     if (err) throw err;
-            //     // results is an array consisting of messages collected during execution
-            //     console.log('results: %j', results);
+             console.log("The file was saved!");
+             PythonShell.run('matcher.py', function (err, results) {
+                 // results is an array consisting of messages collected during execution
+                 console.log('results: %j', results);
+                 //console.log(err)
                 
-            // });
+             });
 
 
         }); 

@@ -1,2 +1,2 @@
-env_variables:
-  CLOUD_STORAGE_SOMETHING
+runtime: nodejs
+env: flex

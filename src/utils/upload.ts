@@ -1,8 +1,8 @@
-import Storage from '@google-cloud/storage';
+/*import Storage from '@google-cloud/storage';
 const bucketName = "dating-app";
 
-function toGoogle(inname) {
-	
+
+	const inname = "matt2"
 	// The name of the local file to upload, e.g. "./local/path/to/file.txt"
 	const filename = "./uploads/" + inname;
 
@@ -27,4 +27,4 @@ function toGoogle(inname) {
   	if (err) throw err;
   	console.log('successfully deleted ' + filename);
 	});
-}
+*/

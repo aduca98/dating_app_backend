@@ -9,13 +9,22 @@ Created on Tue Aug  1 12:15:48 2017
 
 import sys
 import json
-from pprint import pprint
+from nltk.corpus import wordnet as wn
 
 ## GETTING INFO FROM TERMINAL (JSON)
 ## sys.argv is list where 1st item is path of this file, 2nd, 3rd,...,nth are passed in arguments
 #for string in sys.argv:
-#    print(string)
+#    print(string) # if(len(wn.synsets(mystring)) > 0)
 
+def syns(mystring):
+    a = wn.synsets(mystring)
+    #print(a)
+    if (len(a) > 0):
+        return a[0]
+
+def compare(word1, word2):
+    result = syns(word1).path_similarity(syns(word2))
+    return result
 
 ## INTERPRETING JSON FROM FILE
 with open('data.json') as data_file:    
@@ -103,7 +112,8 @@ for i in range(len(data['potentialMatches'])):
     thirdhighest = 0
     bestkeywords = []
     for category_string in data['user']['selfCategories']: #for each category that this person has,
-        if category_string in ith_person['matchCategories']: #if that category is wanted by a person in the database,
+         #if that category is wanted by a person in the database,
+        if category_string in ith_person['matchCategories']:
             x = data['user']['selfCategories'][category_string] * ith_person['matchCategories'][category_string]
             SCORE[i] += x
             if x >= highest:
@@ -130,8 +140,8 @@ for i in range(len(data['potentialMatches'])):
                 thirdhighest = x
                 """
     for category_string in data['user']['matchCategories']: #for each category that this person wants,
-        if category_string in ith_person['selfCategories']: #if that category is had by a person in the database,
-            x = data['user']['matchCategories'][category_string] * ith_person['selfCategories'][category_string] 
+        if category_string in ith_person['selfCategories']:
+            x =  data['user']['matchCategories'][category_string] * ith_person['selfCategories'][category_string] 
             SCORE[i] += x
             if x >= highest:
                 thirdhighest = secondhighest
@@ -146,45 +156,65 @@ for i in range(len(data['potentialMatches'])):
                 thirdhighest = x
                 bestkeywords.append(category_string)
     for my_salience in data['user']['selfEntitySalience']: #for each category that this person wants,
-        if my_salience in ith_person['matchEntitySalience']: #if that category is had by a person in the database,
-            x = data['user']['selfEntitySalience'][my_salience] * ith_person['matchEntitySalience'][my_salience]
-            SCORE[i] += x
-            if x >= highest:
-                thirdhighest = secondhighest
-                secondhighest = highest
-                highest = x
-                bestkeywords.append(my_salience)
-            elif x >= secondhighest:
-                thirdhighest = secondhighest
-                secondhighest = x
-                bestkeywords.append(my_salience)
-            elif x >= thirdhighest:
-                thirdhighest = x
-                bestkeywords.append(my_salience)
+        if(len(wn.synsets(mystring)) is 0):
+            if my_salience in ith_person['matchEntitySalience']:
+                x = data['user']['selfEntitySalience'][my_salience] * ith_person['matchEntitySalience'][my_salience]
+                SCORE[i] += x
+                if x >= highest:
+                    thirdhighest = secondhighest
+                    secondhighest = highest
+                    highest = x
+                    bestkeywords.append(my_salience)
+                elif x >= secondhighest:
+                    thirdhighest = secondhighest
+                    secondhighest = x
+                    bestkeywords.append(my_salience)
+                elif x >= thirdhighest:
+                    thirdhighest = x
+                    bestkeywords.append(my_salience)
+        else: 
+            for my_salience2 in ith_person['matchEntitySalience']: #if that category is had by a person in the database,
+                x = compare(my_salience, my_salience2) * data['user']['selfEntitySalience'][my_salience] * ith_person['matchEntitySalience'][my_salience2]
+                SCORE[i] += x
+                if x >= highest:
+                    thirdhighest = secondhighest
+                    secondhighest = highest
+                    highest = x
+                    bestkeywords.append(my_salience)
+                elif x >= secondhighest:
+                    thirdhighest = secondhighest
+                    secondhighest = x
+                    bestkeywords.append(my_salience)
+                elif x >= thirdhighest:
+                    thirdhighest = x
+                    bestkeywords.append(my_salience)
     for my_salience in data['user']['matchEntitySalience']: #for each category that this person wants,
-        if my_salience in ith_person['selfEntitySalience']: #if that category is had by a person in the database,
-            x = data['user']['selfEntitySalience'][my_salience] * ith_person['matchEntitySalience'][my_salience]
-            SCORE[i] += x
-            if x >= highest:
-                thirdhighest = secondhighest
-                secondhighest = highest
-                highest = x
-                bestkeywords.append(my_salience)
-            elif x >= secondhighest:
-                thirdhighest = secondhighest
-                secondhighest = x
-                bestkeywords.append(my_salience)
-            elif x >= thirdhighest:
-                thirdhighest = x
-                bestkeywords.append(my_salience)
+        if (len(wn.synsets(mystring)) is 0):
+            if my_salience in ith_person['matchEntitySalience']:
+        else:
+            for my_salience2 in ith_person['selfEntitySalience']: #if that category is had by a person in the database,
+                x = compare(my_salience, my_salience2) * data['user']['matchEntitySalience'][my_salience] * ith_person['selfEntitySalience'][my_salience2]
+                SCORE[i] += x
+                if x >= highest:
+                    thirdhighest = secondhighest
+                    secondhighest = highest
+                    highest = x
+                    bestkeywords.append(my_salience)
+                elif x >= secondhighest:
+                    thirdhighest = secondhighest
+                    secondhighest = x
+                    bestkeywords.append(my_salience)
+                elif x >= thirdhighest:
+                    thirdhighest = x
+                    bestkeywords.append(my_salience)
     #for keyword in bestkeywords:
     #    print(keyword)
     if len(bestkeywords) > 2:
-        bestMatches.append({bestkeywords[-1],bestkeywords[-2],bestkeywords[-3]})
+        bestMatches.append([bestkeywords[-1],bestkeywords[-2],bestkeywords[-3]])
     elif len(bestkeywords) > 1:
-        bestMatches.append({bestkeywords[-1],bestkeywords[-2]})
+        bestMatches.append([bestkeywords[-1],bestkeywords[-2]])
     elif len(bestkeywords) > 0:
-        bestMatches.append({bestkeywords[-1]})
+        bestMatches.append([bestkeywords[-1]])
 
 myDict = dict(zip(myIDs, SCORE))
 
@@ -211,16 +241,18 @@ def point5Round(afloat):
 Matrix = [[0 for x in range(3)] for y in range(len(myDict))]
 
 
+
 #Normalization of data:
 rownum = 0
 for key in myDict:
 #    print(key + ":" + str(myDict[key]))
-    myDict[key] = point5Round(10 * (myDict[key] * .5) ** (1))
+    myDict[key] = point5Round(10 * (myDict[key] * 2) ** (.5))
     if myDict[key] > 10:
         myDict[key] = 10.0
-    Matrix[rownum][0] = key.encode('utf-8')
+    Matrix[rownum][0] = key
     Matrix[rownum][1] = myDict[key]
-    Matrix[rownum][2] = bestMatches[rownum]
+    if (len(bestMatches) > rownum):
+        Matrix[rownum][2] = bestMatches[rownum]
     rownum += 1
 
 """
@@ -249,6 +281,8 @@ def sort2DArray(TwoDArray):
     res = sorted(TwoDArray, key=lambda x: x[1])
     return res
 
+print(json.dumps(sort2DArray(Matrix)))
+
 stringRes = (str(sort2DArray(Matrix)))
 realString = ""
 for char in stringRes:
@@ -262,4 +296,4 @@ for char in stringRes:
 #print(" ")
 #print("HERE IS THE RESULT:")
 # print(realString)
-print(stringRes)
+#print(stringRes)

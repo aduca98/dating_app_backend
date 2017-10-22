@@ -166,16 +166,16 @@ for i in range(len(data['potentialMatches'])):
                     secondhighest = highest
                     highest = x
                     if (my_salience not in bestkeywords):
-                        bestkeywords.append(my_salience)
+                        bestkeywords.append(my_salience2)
                 elif x >= secondhighest:
                     thirdhighest = secondhighest
                     secondhighest = x
                     if (my_salience not in bestkeywords):
-                        bestkeywords.append(my_salience)
+                        bestkeywords.append(my_salience2)
                 elif x >= thirdhighest:
                     thirdhighest = x
                     if (my_salience not in bestkeywords):
-                        bestkeywords.append(my_salience)
+                        bestkeywords.append(my_salience2)
     for my_salience in data['user']['matchEntitySalience']: #for each category that this person wants,
         if (len(wn.synsets(my_salience)) is 0):
             if my_salience in ith_person['selfEntitySalience']:
@@ -204,16 +204,16 @@ for i in range(len(data['potentialMatches'])):
                     secondhighest = highest
                     highest = x
                     if (my_salience not in bestkeywords):
-                        bestkeywords.append(my_salience)
+                        bestkeywords.append(my_salience2)
                 elif x >= secondhighest:
                     thirdhighest = secondhighest
                     secondhighest = x
                     if (my_salience not in bestkeywords):
-                        bestkeywords.append(my_salience)
+                        bestkeywords.append(my_salience2)
                 elif x >= thirdhighest:
                     thirdhighest = x
                     if (my_salience not in bestkeywords):
-                        bestkeywords.append(my_salience)
+                        bestkeywords.append(my_salience2)
     #for keyword in bestkeywords:
     #    print(keyword)
     if len(bestkeywords) > 2:
